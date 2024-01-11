@@ -1,84 +1,90 @@
 let employees = [];
-const urlAPI = `https://randomuser.me/api/?results=12&inc=name, picture,
-email, location, phone, dob &noinfo &nat=US`
+const urlAPI = `https://randomuser.me/api/?results=12&inc=name,picture,email,location,phone,dob&noinfo&nat=US`;
 const gallery = document.querySelector(".gallery");
 const modalContainer = document.querySelector(".modal-container");
-const modalContent = document.querySelector(".modal");
 const modalClose = document.querySelector(".modal-close-btn");
 
+// Fetch data from the API
 fetch(urlAPI)
   .then(res => res.json())
   .then(res => res.results)
   .then(displayEmployees)
-  .catch(err => console.log(err))
+  .catch(err => console.log(err));
 
+// Function to display employees in the gallery
 function displayEmployees(employeeData) {
-    employees = employeeData;
+  employees = employeeData;
 
-    let employeeHTML = "";
+  let employeeHTML = "";
 
-    employees.forEach((employee, index) => {
-        let name = employee.name;
-        let email = employee.email;
-        let city = employee.location.city;
-        let state = employee.location.state;
-        let picture = employee.picture;
-        console.dir(employee);
+  // Loop through each employee and generate HTML for their card
+  employees.forEach((employee, index) => {
+    let name = employee.name;
+    let email = employee.email;
+    let city = employee.location.city;
+    let state = employee.location.state;
+    let picture = employee.picture;
 
-        employeeHTML += `
-        <div class="card" data-index="${index}">
-            <div class="card-img-container">
-                <img class="card-img" src="${picture.large}" alt="profile picture">
-            </div>
-            <div class="card-info-container">
-                <h3 id="name" class="card-name cap">${name.first} ${name.last}</h3>
-                <p class="card-text">${email}</p>
-                <p class="card-text cap">${city}, ${state}</p>
-            </div>
+    
+    employeeHTML += `
+      <div class="card" data-index="${index}">
+        <div class="card-img-container">
+          <img class="card-img" src="${picture.large}" alt="profile picture">
         </div>
-        `
-    })
+        <div class="card-info-container">
+          <h3 id="name" class="card-name cap">${name.first} ${name.last}</h3>
+          <p class="card-text">${email}</p>
+          <p class="card-text cap">${city}, ${state}</p>
+        </div>
+      </div>
+    `;
+  });
 
-    gallery.innerHTML = employeeHTML;
 
+  gallery.innerHTML = employeeHTML;
 }
 
+// Function to display a modal when a card is clicked
 function displayModal(index) {
-    let {name, dob, phone, email, location: { city, street, state, postcode
-  }, picture } = employees[index];
+  let { name, dob, phone, email, location: { city, street, state, postcode }, picture } = employees[index];
 
   let date = new Date(dob.date);
 
+  // Generate HTML for the modal
   let modalHTML = `
-  <div class="modal-container">
-  <div class="modal">
-      <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-      <div class="modal-info-container">
+    <div class="modal-container">
+      <div class="modal">
+        <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+        <div class="modal-info-container">
           <img class="modal-img" src="${picture.large}" alt="profile picture">
           <h3 id="name" class="modal-name cap">${name.first} ${name.last}</h3>
           <p class="modal-text">${email}</p>
           <p class="modal-text cap">${city}, ${state}</p>
           <hr>
           <p class="modal-text">${phone}</p>
-          <p class="modal-text">${city}, ${state}, ${postcode}</p>
-          <p class="modal-text">Birthday: ${date.getMonth()}/${date.getDay()}/${date.getFullYear()}</p>
+          <p class="modal-text">${street}, ${state}, ${postcode}</p>
+          <p class="modal-text">Birthday: ${date.getMonth()}/${date.getDate()}/${date.getFullYear()}</p>
+        </div>
       </div>
-  </div>
-  `
+    </div>
+  `;
 
-  modalContainer.classList.add('hidden');
+  
   modalContainer.style.display = 'none';
 
+  
+  modalContainer.innerHTML = modalHTML;
+
+  // Event listener for closing the modal
   modalClose.addEventListener('click', () => {
     modalContainer.style.display = 'none';
-  })
+  });
 
-
+  // Event listener for clicking on a card to display the modal
   gallery.addEventListener('click', (e) => {
     if (e.target.closest('.card')) {
-        const card = e.target.closest(".card");
-        const index = card.getAttribute('data-index');
-        displayModal(index);
+      const index = e.target.closest('.card').getAttribute('data-index');
+      displayModal(index);
     }
-  })
+  });
 }
