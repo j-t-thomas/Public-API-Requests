@@ -76,7 +76,8 @@ function displayModal(index) {
 
   gallery.addEventListener('click', (e) => {
     if (e.target.closest('.card')) {
-        const index = e.target.closest('.card').getAttribute('data-index');
+        const card = e.target.closest(".card");
+        const index = card.getAttribute('data-index');
         displayModal(index);
     }
   })
