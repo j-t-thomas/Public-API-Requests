@@ -68,8 +68,8 @@ function displayModal(index) {
           <p class="modal-text cap">${city}, ${state}</p>
           <hr>
           <p class="modal-text">${phone}</p>
-          <p class="modal-text">${street}, ${state}, ${postcode}</p>
-          <p class="modal-text">Birthday: ${date.getMonth()}/${date.getDate()}/${date.getFullYear()}</p>
+          <p class="modal-text">${street.number} ${street.name}, ${state}, ${postcode}</p>
+          <p class="modal-text">Birthday: ${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}</p>
         </div>
       </div>
     </div>
