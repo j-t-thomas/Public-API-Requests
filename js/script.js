@@ -1,8 +1,6 @@
 let employees = [];
 const urlAPI = `https://randomuser.me/api/?results=12&inc=name,picture,email,location,phone,dob&noinfo&nat=US`;
 const gallery = document.querySelector(".gallery");
-const modalContainer = document.querySelector(".modal-container");
-const modalClose = document.querySelector(".modal-close-btn");
 
 // Fetch data from the API
 fetch(urlAPI)
@@ -12,10 +10,10 @@ fetch(urlAPI)
   .catch(err => console.log(err));
 
 // Function to display employees in the gallery
-function displayEmployees(employeeData) {
+  function displayEmployees(employeeData) {
   employees = employeeData;
 
-  let employeeHTML = "";
+  let employeeHTML = '';
 
   // Loop through each employee and generate HTML for their card
   employees.forEach((employee, index) => {
@@ -42,6 +40,14 @@ function displayEmployees(employeeData) {
 
 
   gallery.innerHTML = employeeHTML;
+  
+  // Event listener for clicking on a card to display the modal
+  gallery.addEventListener('click', (e) => {
+    if (e.target.closest('.card')) {
+        const index = e.target.closest('.card').getAttribute('data-index');
+        displayModal(index);
+      }
+  });
 }
 
 // Function to display a modal when a card is clicked
@@ -70,21 +76,12 @@ function displayModal(index) {
   `;
 
   
-  modalContainer.style.display = 'none';
-
-  
-  modalContainer.innerHTML = modalHTML;
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  const modalClose = document.querySelector('.modal-close-btn');
 
   // Event listener for closing the modal
   modalClose.addEventListener('click', () => {
-    modalContainer.style.display = 'none';
-  });
-
-  // Event listener for clicking on a card to display the modal
-  gallery.addEventListener('click', (e) => {
-    if (e.target.closest('.card')) {
-      const index = e.target.closest('.card').getAttribute('data-index');
-      displayModal(index);
-    }
-  });
+    const modalContainer = document.querySelector('.modal-container');
+    modalContainer.remove();
+  })
 }
